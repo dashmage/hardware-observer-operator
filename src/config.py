@@ -71,3 +71,5 @@ TOOLS_DIR = Path("/usr/sbin")
 
 # SNAP environment
 SNAP_COMMON = Path(f"/var/snap/{EXPORTER_NAME}/common")
+
+LOG_FILES = ["/var/log/syslog"]

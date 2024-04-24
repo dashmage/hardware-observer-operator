@@ -15,10 +15,12 @@ from ops.model import ActiveStatus, BlockedStatus, MaintenanceStatus
 from redfish import redfish_client
 from redfish.rest.v1 import InvalidCredentialsError
 
+from charms.loki_k8s.v0.loki_push_api import LogProxyConsumer
 from config import (
     EXPORTER_CRASH_MSG,
     EXPORTER_HEALTH_RETRY_COUNT,
     EXPORTER_HEALTH_RETRY_TIMEOUT,
+    LOG_FILES,
     REDFISH_MAX_RETRY,
     REDFISH_TIMEOUT,
     HWTool,
@@ -53,6 +55,7 @@ class HardwareObserverCharm(ops.CharmBase):
             # https://prometheus.io/docs/prometheus/latest/configuration/configuration/#duration
             scrape_configs=[{"scrape_timeout": f"{int(self.model.config['collect-timeout'])}s"}],
         )
+        self._logging = LogProxyConsumer(self, relation_name="logging", log_files=LOG_FILES)
         self.exporter = Exporter(self.charm_dir)
 
         self.framework.observe(self.on.config_changed, self._on_config_changed)
